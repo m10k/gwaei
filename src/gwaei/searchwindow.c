@@ -2387,6 +2387,7 @@ gw_searchwindow_initialize_search_toolbar (GwSearchWindow *window)
       }
       menuitem = GTK_MENU_ITEM (gtk_menu_item_new ());
       submenu = GTK_MENU (gtk_menu_new_from_model (menumodel));
+      g_object_unref(menumodel);
 
       gtk_toolbar_insert (toolbar, item, -1);
       gtk_container_add (GTK_CONTAINER (item), GTK_WIDGET (menubar));
@@ -2745,6 +2746,9 @@ gw_searchwindow_get_popup_menu (GwSearchWindow *window)
     link = gw_history_get_combined_menumodel (priv->history);
     
     gw_menumodel_set_links (menumodel, "history-list-link", NULL, G_MENU_LINK_SECTION, link);
+
+    // Increase refcount of the menu model, or it will be freed together with the builder
+    g_object_ref(menumodel);
 
     if (builder != NULL) g_object_unref (builder); builder = NULL;
     
